@@ -79,11 +79,11 @@ El proyecto aborda 7 temas clave estructurados de forma didáctica:
 └── README.md            # Documentación del proyecto
 Equipo de Desarrollo
 
-Nombre	Número de Control
+Nombre	                    Número de Control
 
-Sebastián Durán Palma	25410172
+Sebastián Durán Palma	            25410172
 
-Luis Emilio Coronado Silva	25410163
+Luis Emilio Coronado Silva	         25410163
 
 Diego Alexander Nevarez Rodriguez	25410149
 
@@ -159,13 +159,13 @@ El proyecto cubre 3 métodos fundamentales de búsqueda y una sección comparati
 └── README.md            # Documentación del proyecto
 👥 Equipo de Desarrollo (guayaba’s team)
 
-Nombre
+Nombre	                    Número de Control
 
-Sebastián Durán Palma. Número de Control: 25410172
+Sebastián Durán Palma	            25410172
 
-Luis Emilio Coronado Silva: 25410163
+Luis Emilio Coronado Silva	         25410163
 
-Diego Alexander Nevárez Rodríguez: 25410149
+Diego Alexander Nevarez Rodriguez	25410149
 
 © 2026 Guayaba´s Team S.A. de C.V. Todos los derechos reservados.
 
