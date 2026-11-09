@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Unidad VI · Métodos de búsqueda · guayaba’s team</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Young+Serif&family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+<style>
+:root{--paper:#fff4f1;--card:#fff;--ink:#3a1f2b;--guava:#ff5a7a;--leaf:#2e7d4f;--seed:#f4b942;--line:#f1d5d6;--soft:#ffe3e8;--mint:#e1f3e8}
+body{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);line-height:1.7}
+h1,h2,h3,h4,.brand{font-family:'Young Serif',serif;font-weight:400;color:var(--ink)}
+.mono,code,pre{font-family:'JetBrains Mono',monospace}
+html{scroll-behavior:smooth;scroll-padding-top:80px}
+.navbar{background:rgba(255,244,241,.88);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.brand{font-size:1.25rem;color:var(--ink);text-decoration:none;display:flex;align-items:center;gap:.6rem}
+.gv{width:28px;height:28px;border-radius:50%;background:radial-gradient(circle,#ffc2cd 0 38%,var(--guava) 39% 70%,var(--leaf) 71%);position:relative;animation:wob 4s ease-in-out infinite}
+.gv::after{content:'';position:absolute;inset:9px;background:radial-gradient(circle,var(--seed) 0 2px,transparent 2.5px) 0 0/6px 6px}
+.nav-link{color:var(--ink);font-weight:500;font-size:.93rem;position:relative}
+.nav-link:hover,.nav-link.active{color:var(--guava)}
+.nav-link::after{content:'';position:absolute;left:.5rem;right:.5rem;bottom:2px;height:2px;background:var(--guava);transform:scaleX(0);transition:.25s}
+.nav-link:hover::after,.nav-link.active::after{transform:scaleX(1)}
+.hero{padding:8rem 0 4.5rem;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;width:560px;height:560px;right:-160px;top:-200px;border-radius:50%;background:radial-gradient(circle,rgba(255,90,122,.28),transparent 65%);animation:drift 14s ease-in-out infinite alternate}
+.hero .container{position:relative}
+.hero h1{font-size:clamp(2.4rem,6vw,4.4rem);line-height:1.05}
+.hero h1 em{color:var(--guava);font-style:normal}
+.tag{display:inline-block;background:var(--mint);color:var(--leaf);font-weight:700;font-size:.85rem;border-radius:2rem;padding:.25rem .9rem}
+.btn-g{background:var(--guava);color:#fff;border:0;border-radius:.7rem;font-weight:700;padding:.6rem 1.3rem;transition:.2s}
+.btn-g:hover{background:var(--ink);color:#fff;transform:translateY(-2px)}
+.btn-o{border:2px solid var(--line);background:var(--card);color:var(--ink);border-radius:.7rem;font-weight:700;padding:.6rem 1.3rem;transition:.2s}
+.btn-o:hover{border-color:var(--guava);color:var(--guava);transform:translateY(-2px)}
+.hv{display:flex;gap:.45rem;flex-wrap:wrap}
+.hv span{font-family:'JetBrains Mono',monospace;font-size:.85rem;background:var(--card);border:2px solid var(--line);border-radius:.7rem;padding:.8rem .55rem;animation:scan 4.5s infinite}
+section.topic{padding:4.5rem 0;border-top:1px solid var(--line)}
+.num{font-family:'JetBrains Mono',monospace;color:var(--guava);font-weight:500}
+section h2{font-size:clamp(1.8rem,3.6vw,2.6rem)}
+.lead-s{max-width:40rem;font-size:1.1rem;opacity:.85}
+.box{background:var(--card);border:2px solid var(--line);border-radius:1.2rem;padding:1.5rem;transition:.25s}
+.box:hover{transform:translateY(-4px);border-color:var(--guava);box-shadow:0 16px 30px -18px var(--guava)}
+.note{border-left:5px solid var(--leaf);background:var(--mint);border-radius:0 1rem 1rem 0;padding:1rem 1.2rem}
+.note.g{border-color:var(--guava);background:var(--soft)}
+pre{background:#3a1f2b;color:#ffe3e8;border-radius:1rem;padding:1.1rem 1.3rem;font-size:.83rem;margin:0;overflow-x:auto}
+pre .k{color:#ffb3c1}pre .c{color:#9fd6b2}
+.demo{background:var(--card);border:2px solid var(--line);border-radius:1.2rem;padding:1.4rem}
+.form-control{border:2px solid var(--line);border-radius:.6rem;color:var(--ink)}
+.form-control:focus{border-color:var(--guava);box-shadow:0 0 0 .2rem rgba(255,90,122,.2)}
+.cells{display:flex;gap:.5rem;flex-wrap:wrap;margin:1.1rem 0 .5rem;min-height:5.2rem}
+.cv{position:relative;min-width:3.9rem;text-align:center;font-family:'JetBrains Mono',monospace;background:var(--paper);border:2px solid var(--line);border-radius:.8rem;padding:.6rem .4rem 1.3rem;transition:.3s}
+.cv small{position:absolute;left:0;right:0;bottom:.15rem;font-size:.68rem;opacity:.5}
+.cv i{position:absolute;left:50%;top:-1.35rem;transform:translateX(-50%);font-style:normal;font-size:.65rem;font-weight:700;color:var(--leaf);white-space:nowrap}
+.cv.seen{background:#f6e7e7;opacity:.6}
+.cv.out{opacity:.25}
+.cv.cur{background:var(--guava);color:#fff;border-color:var(--guava);transform:translateY(-8px) scale(1.06)}
+.cv.found{background:var(--leaf);color:#fff;border-color:var(--leaf);transform:translateY(-8px) scale(1.1)}
+.msg{min-height:3rem;font-weight:500}
+.bk{display:flex;align-items:center;gap:.8rem;padding:.45rem .6rem;border-radius:.7rem;transition:.3s}
+.bk>b{font-family:'JetBrains Mono',monospace;width:2.2rem;height:2.2rem;display:grid;place-items:center;border-radius:.6rem;background:var(--soft);color:var(--guava)}
+.bk.hl{background:var(--soft)}
+.chain{display:flex;align-items:center;gap:.4rem;flex-wrap:wrap}
+.kc{font-family:'JetBrains Mono',monospace;background:var(--card);border:2px solid var(--line);border-radius:.6rem;padding:.15rem .6rem;animation:pop .35s}
+.kc.hit{background:var(--leaf);color:#fff;border-color:var(--leaf)}
+.chain em{opacity:.4;font-size:.85rem}
+.table{--bs-table-bg:transparent;--bs-table-color:var(--ink);--bs-table-border-color:var(--line)}
+.pill{font-weight:700;font-size:.8rem;border-radius:2rem;padding:.2rem .7rem;background:var(--mint);color:var(--leaf)}
+.pill.r{background:var(--soft);color:var(--guava)}
+.team-card{height:100%;text-align:center;background:var(--card);border:2px solid var(--line);border-radius:1.4rem;padding:2rem 1.4rem;transition:.25s}
+.team-card:hover{transform:translateY(-6px);border-color:var(--guava);box-shadow:0 18px 32px -18px var(--guava)}
+.avatar{position:relative;width:140px;height:140px;margin:0 auto 1.2rem}
+.avatar::before{content:'';position:absolute;inset:0;border-radius:50%;background:conic-gradient(var(--guava),var(--seed),var(--leaf),var(--guava))}
+.team-card:hover .avatar::before{animation:spin 3s linear infinite}
+.avatar-in{position:absolute;inset:6px;border-radius:50%;overflow:hidden;background:var(--soft);display:grid;place-items:center;border:4px solid var(--card);font-size:3rem;color:var(--guava)}
+.avatar-in img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.chip{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:.8rem;background:var(--soft);color:var(--guava);border-radius:.5rem;padding:.2rem .6rem}
+footer{padding:3rem 0;border-top:1px solid var(--line);font-size:.9rem;opacity:.85}
+.bar{position:fixed;top:0;left:0;height:3px;width:0;background:var(--guava);z-index:2000}
+.rv{opacity:0;transform:translateY(26px);transition:opacity .7s,transform .7s}
+.rv.in{opacity:1;transform:none}
+@keyframes scan{0%,11%{background:var(--guava);color:#fff;border-color:var(--guava);transform:translateY(-8px)}16%,100%{background:var(--card);color:var(--ink);border-color:var(--line);transform:none}}
+@keyframes drift{to{transform:translate(-90px,70px) scale(1.15)}}
+@keyframes wob{0%,100%{transform:rotate(-8deg)}50%{transform:rotate(8deg)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes pop{from{transform:scale(.5);opacity:0}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.rv{opacity:1;transform:none}}
+</style>
+</head>
+<body data-bs-spy="scroll" data-bs-target="#menu" data-bs-offset="90" tabindex="0">
+<div class="bar" id="bar"></div>
+
+<nav class="navbar navbar-expand-lg fixed-top">
+ <div class="container">
+  <a class="brand" href="#inicio"><img src="Logo-TecNM (1).png" alt="Logo TecNM" height="50" class="me-2">  </a>
+  <button class="navbar-toggler border-0" data-bs-toggle="collapse" data-bs-target="#menu" aria-label="Menú"><i class="bi bi-list fs-2"></i></button>
+  <div class="collapse navbar-collapse" id="menu">
+   <ul class="navbar-nav ms-auto">
+    <li class="nav-item"><a class="nav-link" href="#s1">6.1 Secuencial</a></li>
+    <li class="nav-item"><a class="nav-link" href="#s2">6.2 Binaria</a></li>
+    <li class="nav-item"><a class="nav-link" href="#s3">6.3 Hash</a></li>
+    <li class="nav-item"><a class="nav-link" href="#comp">Comparativa</a></li>
+    <li class="nav-item"><a class="nav-link" href="#equipo">Equipo</a></li>
+   </ul>
+  </div>
+ </div>
+</nav>
+
+<header class="hero" id="inicio"><div class="container">
+ <span class="tag">Unidad VI · Métodos de búsqueda</span>
+ <h1 class="mt-3">Encontrar un dato entre <em>muchos</em>, ¿cuál es la mejor forma?</h1>
+ <p class="lead-s mt-3">Tres maneras de buscar en una colección de datos: recorrerla toda, partirla por la mitad o ir directo a la dirección correcta.</p>
+ <div class="hv mt-4" aria-hidden="true"><span>2473</span><span>2545</span><span>2834</span><span>2892</span><span>2898</span><span>2983</span><span>3005</span><span>3446</span><span>3685</span></div>
+ <div class="d-flex flex-wrap gap-2 mt-4">
+  <a href="#s1" class="btn btn-g">Empezar</a>
+  <a href="#equipo" class="btn btn-o">Conoce al equipo</a>
+ </div>
+</div></header>
+
+<main>
+<!-- 6.1 -->
+<section class="topic" id="s1"><div class="container">
+ <p class="num mb-1">6.1</p>
+ <h2>Búsqueda secuencial</h2>
+ <p class="lead-s">Consiste en recorrer el vector del principio hacia el final, sin que los datos tengan que estar ordenados. Si se encuentra el valor, la búsqueda termina; si se recorre todo el vector sin encontrarlo, se declara fallida.</p>
+ <div class="row g-4 mt-1">
+  <div class="col-lg-6"><pre><span class="c">// Búsqueda secuencial: devuelve la posición (0, 1, 2...) o -1</span>
+<span class="k">static</span> <span class="k">int</span> BusquedaSecuencial(<span class="k">int</span>[] a, <span class="k">int</span> t)
+{
+    <span class="k">for</span> (<span class="k">int</span> i = 0; i &lt; a.Length; i++)
+    {
+        <span class="k">if</span> (a[i] == t)
+            <span class="k">return</span> i;       <span class="c">// encontrado</span>
+    }
+    <span class="k">return</span> -1;              <span class="c">// recorrió todo y no está</span>
+}
+
+<span class="c">// Con centinela: el vector tiene un espacio extra al final</span>
+<span class="k">static</span> <span class="k">int</span> Centinela(<span class="k">int</span>[] a, <span class="k">int</span> n, <span class="k">int</span> t)
+{
+    a[n] = t;               <span class="c">// centinela en A[n+1]</span>
+    <span class="k">int</span> i = 0;
+    <span class="k">while</span> (a[i] != t)
+        i++;
+    <span class="k">return</span> i &lt; n ? i : -1;  <span class="c">// si i llegó a n, no estaba</span>
+}</pre></div>
+  <div class="col-lg-6">
+   <div class="note mb-3"><strong>Elemento centinela.</strong> Se agrega el valor buscado al final, en A[n+1], para que la búsqueda siempre tenga éxito. Así se evita comparar i con n en cada paso. Si el índice llega a n+1, el valor no estaba en el vector original.</div>
+   <div class="note g"><strong>Costo.</strong> En un vector de 1000 elementos se hacen en promedio unas 500 comparaciones. Es sencillo, pero lento cuando los datos son muchos.</div>
+  </div>
+ </div>
+ <h3 class="h5 mt-5 mb-3">Pruébalo paso a paso</h3>
+ <div class="demo" id="d1">
+  <div class="d-flex flex-wrap gap-2 align-items-end">
+   <div><label class="form-label small mb-1">Vector (separado por comas)</label><input class="form-control form-control-sm mono arr" value="2898, 2473, 3005, 2545, 2983, 3446, 2834" style="width:300px"></div>
+   <div><label class="form-label small mb-1">Buscar</label><input class="form-control form-control-sm mono tgt" value="2983" style="width:90px"></div>
+   <button class="btn btn-g btn-sm step">Paso</button><button class="btn btn-o btn-sm auto">Auto</button><button class="btn btn-o btn-sm reset">Reiniciar</button>
+  </div>
+  <div class="cells"></div>
+  <div class="msg"></div>
+  <div class="small">Comparaciones: <b class="cmp">0</b></div>
+ </div>
+</div></section>
+
+<!-- 6.2 -->
+<section class="topic" id="s2"><div class="container">
+ <p class="num mb-1">6.2</p>
+ <h2>Búsqueda binaria</h2>
+ <p class="lead-s">Se aplica a vectores <strong>ya ordenados</strong> y usa la idea de “divide y vencerás”: se examina el elemento central y, según sea mayor o menor que el buscado, se descarta una mitad del vector. El proceso se repite con la mitad restante.</p>
+ <div class="row g-4 mt-1">
+  <div class="col-lg-6"><pre><span class="c">// Búsqueda binaria: el vector debe estar ordenado</span>
+<span class="k">static</span> <span class="k">int</span> BusquedaBinaria(<span class="k">int</span>[] x, <span class="k">int</span> k)
+{
+    <span class="k">int</span> bajo = 0, alto = x.Length - 1;
+    <span class="k">while</span> (bajo &lt;= alto)
+    {
+        <span class="k">int</span> central = (bajo + alto) / 2;
+        <span class="k">if</span> (x[central] == k)
+            <span class="k">return</span> central;         <span class="c">// encontrado</span>
+        <span class="k">if</span> (k &lt; x[central])
+            alto = central - 1;     <span class="c">// descarta la mitad derecha</span>
+        <span class="k">else</span>
+            bajo = central + 1;     <span class="c">// descarta la mitad izquierda</span>
+    }
+    <span class="k">return</span> -1;                      <span class="c">// no quedan mitades</span>
+}
+
+<span class="c">// Ejemplo de uso</span>
+<span class="k">int</span>[] datos = { 2473, 2545, 2834, 2892, 2898, 2983, 3005, 3446, 3685 };
+<span class="k">int</span> pos = BusquedaBinaria(datos, 2983);
+Console.WriteLine(pos &gt;= 0 ? $"Encontrado en la posición {pos + 1}" : "No encontrado");</pre></div>
+  <div class="col-lg-6">
+   <div class="box mb-3"><strong>El ejemplo del libro.</strong> Para buscar 2983 en el vector de nueve elementos, se examina el central 2898 (posición 5). Como 2983 es mayor, se descarta la primera mitad. Luego se prueba 3005 (posición 7); como 2983 es menor, queda solo la posición 6, que coincide.</div>
+   <div class="note g"><strong>Costo.</strong> Con 1000 elementos, la búsqueda binaria resuelve el problema con solo 10 comparaciones en el peor caso. El precio es que el vector debe estar ordenado antes.</div>
+  </div>
+ </div>
+ <h3 class="h5 mt-5 mb-3">Mira cómo se descartan las mitades</h3>
+ <div class="demo" id="d2">
+  <div class="d-flex flex-wrap gap-2 align-items-end">
+   <div><label class="form-label small mb-1">Vector (se ordena solo)</label><input class="form-control form-control-sm mono arr" value="2473, 2545, 2834, 2892, 2898, 2983, 3005, 3446, 3685" style="width:340px"></div>
+   <div><label class="form-label small mb-1">Buscar</label><input class="form-control form-control-sm mono tgt" value="2983" style="width:90px"></div>
+   <button class="btn btn-g btn-sm step">Paso</button><button class="btn btn-o btn-sm auto">Auto</button><button class="btn btn-o btn-sm reset">Reiniciar</button>
+  </div>
+  <div class="cells pt-3"></div>
+  <div class="msg"></div>
+  <div class="small">Comparaciones: <b class="cmp">0</b></div>
+ </div>
+</div></section>
+
+<!-- 6.3 -->
+<section class="topic" id="s3"><div class="container">
+ <p class="num mb-1">6.3</p>
+ <h2>Búsqueda por funciones de hash</h2>
+ <p class="lead-s">En lugar de comparar, se <strong>calcula</strong> dónde está el dato. Una función hash convierte la clave en un número que indica la posición (cubeta) de una tabla donde se guarda y se busca.</p>
+ <div class="row g-4 mt-1">
+  <div class="col-md-4"><div class="box h-100"><i class="bi bi-calculator fs-2 text-danger"></i><h3 class="h5 mt-2">Función hash</h3><p class="small mb-2">Un método común es el de residuo: <code>h(k) = k mod m</code>, con m el tamaño de la tabla. Para texto se suman los códigos de los caracteres y se aplica el mismo residuo.</p></div></div>
+  <div class="col-md-4"><div class="box h-100"><i class="bi bi-exclamation-triangle fs-2 text-warning"></i><h3 class="h5 mt-2">Colisiones</h3><p class="small mb-2">Dos claves distintas pueden dar la misma posición. Se resuelven con <strong>encadenamiento</strong> (una lista enlazada por cubeta) o con <strong>direccionamiento abierto</strong> (buscar otra casilla libre).</p></div></div>
+  <div class="col-md-4"><div class="box h-100"><i class="bi bi-lightning-charge fs-2 text-success"></i><h3 class="h5 mt-2">Rapidez</h3><p class="small mb-2">Con una buena función y pocas colisiones, buscar cuesta casi una sola operación sin importar cuántos datos haya. Si todo cae en la misma cubeta, se vuelve una búsqueda secuencial.</p></div></div>
+ </div>
+ <h3 class="h5 mt-5 mb-3">Tabla hash con 7 cubetas (encadenamiento)</h3>
+ <div class="demo" id="d3">
+  <div class="d-flex flex-wrap gap-2 align-items-end">
+   <div><label class="form-label small mb-1">Clave (número o texto)</label><input class="form-control form-control-sm mono key" value="31" style="width:160px"></div>
+   <button class="btn btn-g btn-sm ins">Insertar</button><button class="btn btn-o btn-sm sea">Buscar</button><button class="btn btn-o btn-sm clr">Vaciar</button>
+  </div>
+  <div class="msg mt-3"></div>
+  <div class="tbl"></div>
+ </div>
+</div></section>
+
+<!-- Comparativa -->
+<section class="topic" id="comp"><div class="container">
+ <p class="num mb-1">Resumen</p>
+ <h2>¿Cuándo usar cada una?</h2>
+ <div class="table-responsive mt-4"><table class="table align-middle">
+  <thead><tr><th></th><th>Secuencial</th><th>Binaria</th><th>Hash</th></tr></thead>
+  <tbody>
+   <tr><td class="fw-bold">¿Requiere orden?</td><td><span class="pill">No</span></td><td><span class="pill r">Sí</span></td><td><span class="pill">No</span></td></tr>
+   <tr><td class="fw-bold">Comparaciones con 1000 datos</td><td>~500 en promedio</td><td>10 en el peor caso</td><td>Casi 1 con pocas colisiones</td></tr>
+   <tr><td class="fw-bold">Complejidad típica</td><td class="mono">O(n)</td><td class="mono">O(log n)</td><td class="mono">O(1) promedio</td></tr>
+   <tr><td class="fw-bold">Ideal para</td><td>Pocos datos o sin ordenar</td><td>Datos ordenados y estables</td><td>Búsquedas muy frecuentes por clave</td></tr>
+   <tr><td class="fw-bold">Inconveniente</td><td>Lenta con muchos datos</td><td>Hay que ordenar primero</td><td>Colisiones y memoria extra</td></tr>
+  </tbody></table></div>
+</div></section>
+
+<!-- ============ EQUIPO ============ -->
+<section class="topic" id="equipo"><div class="container">
+ <p class="num mb-1">Equipo</p>
+ <h2>Nosotros somos guayaba’s team</h2>
+ <p class="lead-s">Las tres personas detrás de esta WEB</p>
+ <div class="row g-4 mt-1 justify-content-center">
+
+  <!-- INTEGRANTE 1: cambia la foto, el nombre y el número de control -->
+  <div class="col-md-6 col-lg-4"><div class="team-card">
+   <div class="avatar"><div class="avatar-in"><i class="bi bi-person-fill"></i><img src="YoFoto.jpeg" alt="Foto del integrante 1" onerror="this.remove()"></div></div>
+   <h3 class="h5 mb-2">Sebastián Durán Palma</h3>
+   <span class="chip"><i class="bi bi-person-badge me-1"></i>25410172</span>
+  </div></div>
+
+  <!-- INTEGRANTE 2 -->
+  <div class="col-md-6 col-lg-4"><div class="team-card">
+   <div class="avatar"><div class="avatar-in"><i class="bi bi-person-fill"></i><img src="milofotoface.jpeg" alt="Foto del integrante 2" onerror="this.remove()"></div></div>
+   <h3 class="h5 mb-2">Luis Emilio Coronado Silva</h3>
+   <span class="chip"><i class="bi bi-person-badge me-1"></i>25410163</span>
+  </div></div>
+
+  <!-- INTEGRANTE 3 -->
+  <div class="col-md-6 col-lg-4"><div class="team-card">
+   <div class="avatar"><div class="avatar-in"><i class="bi bi-person-fill"></i><img src="diegofoto.jpeg" alt="Foto del integrante 3" onerror="this.remove()"></div></div>
+   <h3 class="h5 mb-2">Diego Alexander Nevarez Rodriguez</h3>
+   <span class="chip"><i class="bi bi-person-badge me-1"></i>25410149</span>
+  </div></div>
+
+ </div>
+</div></section>
+</main>
+
+<footer><div class="container">
+ <p class="mb-1"><strong>guayaba’s team</strong> · Unidad VI: métodos de búsqueda</p>
+ <p class="mb-0"> <em> </em> © 2026 Guayaba´s Team S.A de C.V. All rights reserved.</p>
+</div></footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+/* ===== Algoritmos como generadores: cada yield es un paso ===== */
+function* seq(a,t){
+ for(let i=0;i<a.length;i++){
+  if(a[i]===t){yield{i,found:i,cmp:1,msg:`A[${i+1}] = ${a[i]} y es igual a ${t}. ¡Encontrado en la posición ${i+1}!`};return}
+  yield{i,cmp:1,msg:`A[${i+1}] = ${a[i]} es distinto de ${t}. Sigo con el siguiente.`};
+ }
+ yield{i:a.length,msg:`Recorrí todo el vector y ${t} no está. Búsqueda fallida.`};
+}
+function* bin(a,t){
+ let lo=0,hi=a.length-1;
+ while(lo<=hi){
+  const m=(lo+hi)>>1;
+  if(a[m]===t){yield{lo,hi,mid:m,found:m,cmp:1,msg:`Central A[${m+1}] = ${a[m]} y es igual a ${t}. ¡Encontrado!`};return}
+  if(t<a[m]){yield{lo,hi,mid:m,cmp:1,msg:`Central A[${m+1}] = ${a[m]}. Como ${t} < ${a[m]}, descarto la mitad derecha.`};hi=m-1}
+  else{yield{lo,hi,mid:m,cmp:1,msg:`Central A[${m+1}] = ${a[m]}. Como ${t} > ${a[m]}, descarto la mitad izquierda.`};lo=m+1}
+ }
+ yield{lo:a.length,hi:a.length-1,msg:`No quedan mitades donde buscar: ${t} no está.`};
+}
+function demo(id,algo,sorted){
+ const r=document.getElementById(id),$=s=>r.querySelector(s);
+ let a,t,it,timer,n;
+ function draw(s){
+  $('.cells').innerHTML=a.map((v,i)=>{
+   let c='cv',tg='';
+   if(s.found===i)c+=' found';
+   else if(i===s.i||i===s.mid)c+=' cur';
+   else if(s.lo!==undefined&&(i<s.lo||i>s.hi))c+=' out';
+   else if(s.i!==undefined&&i<s.i)c+=' seen';
+   if(s.lo!==undefined&&s.lo<=s.hi){if(i===s.lo)tg='BAJO';if(i===s.hi)tg=tg?tg+'/ALTO':'ALTO';if(i===s.mid)tg='CENTRAL'}
+   return `<div class="${c}">${tg?`<i>${tg}</i>`:''}${v}<small>${i+1}</small></div>`}).join('');
+ }
+ function init(){
+  clearInterval(timer);n=0;
+  a=$('.arr').value.split(',').map(x=>x.trim()).filter(Boolean).map(Number).filter(x=>!isNaN(x));
+  if(sorted)a.sort((x,y)=>x-y);
+  t=Number($('.tgt').value);it=algo(a,t);
+  draw({});$('.cmp').textContent=0;
+  $('.msg').textContent=sorted?'Vector ordenado. Presiona “Paso” o “Auto”.':'Presiona “Paso” o “Auto”.';
+ }
+ function next(){
+  const x=it.next();
+  if(x.done){clearInterval(timer);return}
+  n+=x.value.cmp||0;$('.cmp').textContent=n;draw(x.value);$('.msg').textContent=x.value.msg;
+ }
+ $('.step').onclick=next;
+ $('.auto').onclick=()=>{clearInterval(timer);timer=setInterval(next,900)};
+ $('.reset').onclick=init;
+ $('.arr').onchange=$('.tgt').onchange=init;
+ init();
+}
+demo('d1',seq,false);demo('d2',bin,true);
+
+/* ===== Tabla hash con encadenamiento ===== */
+(function(){
+ const r=document.getElementById('d3'),M=7;
+ let T=Array.from({length:M},()=>[]);
+ ['10','17','4','12','25'].forEach(k=>T[hash(k).idx].push(k));
+ function hash(k){
+  const num=/^\d+$/.test(k),parts=num?[Number(k)]:[...k].map(c=>c.charCodeAt(0));
+  const sum=parts.reduce((x,y)=>x+y,0);
+  return{idx:sum%M,expr:num?`${k} mod ${M}`:`(${parts.join('+')}) mod ${M}`};
+ }
+ function show(hl,hit){
+  r.querySelector('.tbl').innerHTML=T.map((c,i)=>`<div class="bk${i===hl?' hl':''}"><b>${i}</b><div class="chain">${
+   c.length?c.map(k=>`<span class="kc${k===hit?' hit':''}">${k}</span>`).join('<i class="bi bi-arrow-right"></i>'):'<em>vacía</em>'}</div></div>`).join('');
+ }
+ const val=()=>r.querySelector('.key').value.trim();
+ r.querySelector('.ins').onclick=()=>{
+  const k=val();if(!k)return;const h=hash(k);
+  if(T[h.idx].includes(k)){r.querySelector('.msg').textContent=`“${k}” ya estaba en la cubeta ${h.idx}.`;show(h.idx,k);return}
+  const col=T[h.idx].length>0;T[h.idx].push(k);
+  r.querySelector('.msg').textContent=`h(“${k}”) = ${h.expr} = ${h.idx}. Se guarda en la cubeta ${h.idx}.`+(col?' ¡Colisión! Se encadena después de los que ya estaban.':'');
+  show(h.idx);
+ };
+ r.querySelector('.sea').onclick=()=>{
+  const k=val();if(!k)return;const h=hash(k),p=T[h.idx].indexOf(k);
+  r.querySelector('.msg').textContent=p>=0
+   ?`h(“${k}”) = ${h.expr} = ${h.idx}. Voy directo a la cubeta ${h.idx} y lo encuentro con ${p+1} comparación(es).`
+   :`h(“${k}”) = ${h.expr} = ${h.idx}. Reviso solo la cubeta ${h.idx} (${T[h.idx].length} elemento(s)) y no está.`;
+  show(h.idx,p>=0?k:null);
+ };
+ r.querySelector('.clr').onclick=()=>{T=Array.from({length:M},()=>[]);r.querySelector('.msg').textContent='Tabla vacía. Inserta algunas claves.';show()};
+ r.querySelector('.msg').textContent='Prueba insertar 31 y 24: caen en la misma cubeta que otras claves.';
+ show();
+})();
+
+/* ===== Animaciones de entrada y barra de progreso ===== */
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.12});
+document.querySelectorAll('section.topic .container > *, section.topic .container > .row > *').forEach(el=>{
+ el.classList.add('rv');
+ if(el.parentElement.classList.contains('row'))el.style.transitionDelay=([...el.parentElement.children].indexOf(el)%4)*90+'ms';
+ io.observe(el);
+});
+addEventListener('scroll',()=>{const h=document.documentElement;document.getElementById('bar').style.width=(h.scrollTop/(h.scrollHeight-h.clientHeight)*100)+'%'});
+</script>
+</body>
+</html>
