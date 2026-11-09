@@ -1,6 +1,6 @@
 # UNIDAD VI
 
-## SISTEMAS OPERATIVOS------------------------------------------------------------------------------------------------------------------------------------------------------------
+## SISTEMAS OPERATIVOS---------------------------------------------------------------------------------------------------------
 
 Propósito: Página web interactiva y académica orientada a la divulgación de los temas de Protección y Seguridad en Sistemas Operativos, basada estructuralmente en el capítulo 9 del libro Sistemas operativos modernos de Andrew S. Tanenbaum.
 
