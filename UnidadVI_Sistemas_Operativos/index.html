@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="es" data-bs-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Protección y seguridad en sistemas operativos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700;800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+<style>
+:root{--ink:#14213d;--paper:#f2f5fb;--card:#fff;--line:#d9e0ee;--cobalt:#3355ff;--rose:#e8445a;--teal:#0f9d84;--amber:#e9a100;--soft:#e8edff}
+[data-bs-theme=dark]{--ink:#e6ebfa;--paper:#0f1626;--card:#172038;--line:#2a3555;--cobalt:#7d93ff;--rose:#ff7487;--teal:#34d3b5;--amber:#ffc93c;--soft:#1e2a4d}
+body{font-family:'IBM Plex Sans',sans-serif;background:var(--paper);color:var(--ink);--bs-body-bg:var(--paper);--bs-body-color:var(--ink);line-height:1.65}
+h1,h2,h3,h4,.navbar-brand{font-family:'Bricolage Grotesque',sans-serif;letter-spacing:-.02em;color:var(--ink)}
+code,.mono{font-family:'IBM Plex Mono',monospace}
+html{scroll-behavior:smooth;scroll-padding-top:80px}
+.navbar{background:color-mix(in srgb,var(--paper) 88%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.nav-link{color:var(--ink);opacity:.7;font-weight:500;font-size:.92rem}
+.nav-link.active,.nav-link:hover{opacity:1;color:var(--cobalt)}
+.hero{padding:7.5rem 0 4rem;background:radial-gradient(900px 400px at 85% 0,var(--soft),transparent 70%)}
+.hero h1{font-size:clamp(2.3rem,5.5vw,4rem);font-weight:800;line-height:1.02}
+.lead-s{max-width:34rem;opacity:.8;font-size:1.1rem}
+.btn-c{background:var(--cobalt);color:#fff;border-radius:.6rem;padding:.65rem 1.3rem;font-weight:600;border:0}
+.btn-c:hover{background:var(--ink);color:var(--paper)}
+.btn-o{border:1.5px solid var(--line);color:var(--ink);border-radius:.6rem;padding:.65rem 1.3rem;font-weight:600}
+.btn-o:hover{border-color:var(--cobalt);color:var(--cobalt)}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:1rem;padding:1.4rem}
+.matrix{border-collapse:separate;border-spacing:4px;width:100%;font-size:.82rem;min-width:520px}
+.matrix th{font-weight:600;text-align:center;padding:.3rem;white-space:nowrap}
+.matrix th.dom{text-align:left;color:var(--cobalt)}
+.cell{text-align:center;border-radius:.5rem;height:2.4rem;min-width:3.6rem;background:var(--soft);font-family:'IBM Plex Mono',monospace;font-weight:500;transition:.15s}
+.matrix.live .cell{cursor:pointer}
+.matrix.live .cell:hover{outline:2px solid var(--cobalt)}
+.cell.p{background:color-mix(in srgb,var(--teal) 22%,var(--card));color:var(--teal)}
+.cell.p.w{background:color-mix(in srgb,var(--amber) 25%,var(--card));color:var(--amber)}
+.cell.p.x{background:color-mix(in srgb,var(--rose) 22%,var(--card));color:var(--rose)}
+.verdict{border-radius:.6rem;padding:.6rem .9rem;font-weight:600;font-size:.92rem}
+.verdict.ok{background:color-mix(in srgb,var(--teal) 18%,var(--card));color:var(--teal)}
+.verdict.no{background:color-mix(in srgb,var(--rose) 16%,var(--card));color:var(--rose)}
+section.topic{padding:4.5rem 0;border-top:1px solid var(--line)}
+.tnum{font-family:'IBM Plex Mono',monospace;color:var(--cobalt);font-weight:500;font-size:1rem}
+section h2{font-size:clamp(1.7rem,3.4vw,2.4rem);font-weight:800}
+.fig{border-left:4px solid var(--cobalt);background:var(--card);border-radius:0 .8rem .8rem 0;padding:1rem 1.2rem}
+.goal{height:100%;border-top:4px solid var(--c);background:var(--card);border-radius:.8rem;padding:1.2rem;border-left:1px solid var(--line);border-right:1px solid var(--line);border-bottom:1px solid var(--line)}
+.goal i{font-size:1.5rem;color:var(--c)}
+.goal .th{font-size:.85rem;opacity:.75}
+.nav-tabs{border-color:var(--line)}
+.nav-tabs .nav-link{color:var(--ink);opacity:.7;border:0;border-bottom:3px solid transparent;font-size:.95rem}
+.nav-tabs .nav-link.active{background:none;color:var(--cobalt);border-bottom-color:var(--cobalt);opacity:1}
+.accordion{--bs-accordion-bg:var(--card);--bs-accordion-border-color:var(--line);--bs-accordion-color:var(--ink);--bs-accordion-btn-bg:var(--card);--bs-accordion-btn-color:var(--ink);--bs-accordion-active-bg:var(--soft);--bs-accordion-active-color:var(--ink)}
+.accordion-button{font-weight:600}
+.table{--bs-table-bg:transparent;--bs-table-color:var(--ink);--bs-table-border-color:var(--line)}
+.chip{display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:.8rem;background:var(--soft);color:var(--cobalt);border-radius:.4rem;padding:.1rem .5rem}
+.lvl{display:flex;align-items:center;gap:.6rem;margin:.35rem 0}
+.lvl b{width:7rem;font-size:.85rem}
+.lvl span{height:1.6rem;border-radius:.4rem;background:var(--cobalt);opacity:.85}
+.cipher{font-family:'IBM Plex Mono',monospace;letter-spacing:.08em;word-break:break-all;font-size:1.15rem;color:var(--rose)}
+.form-control,.form-select{background:var(--card);color:var(--ink);border-color:var(--line)}
+.form-control:focus,.form-select:focus{background:var(--card);color:var(--ink);border-color:var(--cobalt);box-shadow:0 0 0 .2rem color-mix(in srgb,var(--cobalt) 25%,transparent)}
+.pill{font-size:.8rem;font-weight:600;border-radius:2rem;padding:.2rem .7rem}
+.pill.t{background:color-mix(in srgb,var(--teal) 20%,var(--card));color:var(--teal)}
+.pill.r{background:color-mix(in srgb,var(--rose) 18%,var(--card));color:var(--rose)}
+footer{padding:3rem 0;border-top:1px solid var(--line);opacity:.8;font-size:.9rem}
+.progress-top{position:fixed;top:0;left:0;height:3px;background:var(--cobalt);width:0;z-index:2000}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.cell{transition:none}}
+
+/* ===== Animaciones ===== */
+.rv{opacity:0;transform:translateY(26px);transition:opacity .7s cubic-bezier(.2,.7,.2,1),transform .7s cubic-bezier(.2,.7,.2,1)}
+.rv.in{opacity:1;transform:none}
+@keyframes up{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:none}}
+@keyframes drift{to{transform:translate(-90px,70px) scale(1.15)}}
+@keyframes beat{0%,100%{transform:scale(1)}50%{transform:scale(1.18)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+.hero{position:relative;overflow:hidden}
+.hero .container{position:relative}
+.hero::before{content:'';position:absolute;width:520px;height:520px;right:-120px;top:-160px;border-radius:50%;background:radial-gradient(circle,color-mix(in srgb,var(--cobalt) 28%,transparent),transparent 65%);animation:drift 14s ease-in-out infinite alternate;pointer-events:none}
+.hero .col-lg-5>*{animation:up .9s cubic-bezier(.2,.7,.2,1) backwards}
+.hero .col-lg-5>*:nth-child(2){animation-delay:.15s}
+.hero .col-lg-5>*:nth-child(3){animation-delay:.3s}
+.hero .col-lg-7 .panel{animation:up 1s .35s cubic-bezier(.2,.7,.2,1) backwards}
+.navbar-brand i{display:inline-block;animation:beat 3s ease-in-out infinite}
+.nav-link{position:relative}
+.nav-link::after{content:'';position:absolute;left:.5rem;right:.5rem;bottom:2px;height:2px;background:var(--cobalt);transform:scaleX(0);transition:transform .25s}
+.nav-link.active::after,.nav-link:hover::after{transform:scaleX(1)}
+.goal,.panel,.team-card{transition:transform .25s,box-shadow .25s,border-color .25s}
+.goal:hover,.panel:hover,.team-card:hover{transform:translateY(-4px);box-shadow:0 14px 30px -14px color-mix(in srgb,var(--cobalt) 45%,transparent);border-color:var(--cobalt)}
+.cell:hover{transform:scale(1.08)}
+.btn-c,.btn-o{transition:transform .2s,background .2s,color .2s,border-color .2s}
+.btn-c:hover,.btn-o:hover{transform:translateY(-2px)}
+
+/* ===== Equipo ===== */
+.team-card{height:100%;text-align:center;background:var(--card);border:1px solid var(--line);border-radius:1.2rem;padding:2rem 1.4rem}
+.avatar{position:relative;width:136px;height:136px;margin:0 auto 1.2rem}
+.avatar::before{content:'';position:absolute;inset:0;border-radius:50%;background:conic-gradient(var(--cobalt),var(--teal),var(--amber),var(--rose),var(--cobalt))}
+.team-card:hover .avatar::before{animation:spin 3s linear infinite}
+.avatar-in{position:absolute;inset:5px;border-radius:50%;overflow:hidden;background:var(--soft);display:grid;place-items:center;border:4px solid var(--card);font-size:3rem;color:var(--cobalt)}
+.avatar-in img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+@media(prefers-reduced-motion:reduce){.rv{opacity:1;transform:none;transition:none}.hero::before,.hero .col-lg-5>*,.hero .col-lg-7 .panel,.navbar-brand i,.team-card:hover .avatar::before{animation:none}}
+</style>
+</head>
+<body data-bs-spy="scroll" data-bs-target="#menu" data-bs-offset="90" tabindex="0">
+<div class="progress-top" id="bar"></div>
+
+<nav class="navbar navbar-expand-lg fixed-top">
+ <div class="container">
+  <a class="navbar-brand fw-bold" href="#inicio"><img src="Logo-TecNM.png" alt="Logo" height="50" class="img-fluid"></a>
+  <button class="navbar-toggler border-0" data-bs-toggle="collapse" data-bs-target="#menu" aria-label="Menú"><i class="bi bi-list fs-2"></i></button>
+  <div class="collapse navbar-collapse" id="menu">
+   <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-1">
+    <li class="nav-item"><a class="nav-link" href="#t1">6.1 Concepto</a></li>
+    <li class="nav-item"><a class="nav-link" href="#t2">6.2 Clasificación</a></li>
+    <li class="nav-item"><a class="nav-link" href="#t3">6.3 Funciones</a></li>
+    <li class="nav-item"><a class="nav-link" href="#t4">6.4 Matrices</a></li>
+    <li class="nav-item"><a class="nav-link" href="#t5">6.5 Lenguaje</a></li>
+    <li class="nav-item"><a class="nav-link" href="#t6">6.6 Amenazas</a></li>
+    <li class="nav-item"><a class="nav-link" href="#t7">6.7 Cifrado</a></li>
+    <li class="nav-item"><a class="nav-link" href="#equipo">Equipo</a></li>
+    <li class="nav-item"><button id="theme" class="btn btn-sm btn-o ms-lg-2" aria-label="Cambiar tema"><i class="bi bi-moon-stars"></i></button></li>
+   </ul>
+  </div>
+ </div>
+</nav>
+
+<header class="hero" id="inicio">
+ <div class="container">
+  <div class="row align-items-center g-5">
+   <div class="col-lg-5">
+    <h1>Quién puede hacer qué, y cómo evitar que lo haga quien no debe.</h1>
+    <p class="lead-s mt-4">Protección y seguridad en sistemas operativos: siete temas explicados a partir del capítulo 9 de <em>Sistemas operativos modernos</em> de Andrew S. Tanenbaum.</p>
+    <div class="d-flex flex-wrap gap-2 mt-4">
+     <a href="#t1" class="btn btn-c">Empezar a leer</a>
+     <a href="#t4" class="btn btn-o">Ver matrices de acceso</a>
+    </div>
+   </div>
+   <div class="col-lg-7">
+    <div class="panel">
+     <h2 class="h5 mb-1">Pruébalo: una matriz de protección</h2>
+     <p class="small opacity-75 mb-3">Cada fila es un dominio y cada columna un objeto. Haz clic en una celda para cambiar sus permisos (R lectura, W escritura, X ejecución).</p>
+     <div class="table-responsive"><table class="matrix live" id="m-hero"></table></div>
+     <div class="row g-2 mt-3 align-items-center">
+      <div class="col-sm-3"><select id="qd" class="form-select form-select-sm" aria-label="Dominio"></select></div>
+      <div class="col-sm-3"><select id="qa" class="form-select form-select-sm" aria-label="Acción"><option value="R">leer</option><option value="W">escribir</option><option value="X">ejecutar</option></select></div>
+      <div class="col-sm-3"><select id="qo" class="form-select form-select-sm" aria-label="Objeto"></select></div>
+      <div class="col-sm-3"><div id="qr" class="verdict"></div></div>
+     </div>
+    </div>
+   </div>
+  </div>
+ </div>
+</header>
+
+<main>
+<!-- 6.1 -->
+<section class="topic" id="t1"><div class="container">
+ <p class="tnum mb-1">6.1</p>
+ <h2>Concepto y objetivos de protección y seguridad</h2>
+ <div class="row g-4 mt-1">
+  <div class="col-lg-6">
+   <p>Tanenbaum separa dos palabras que a menudo se usan como sinónimos. <strong>Seguridad</strong> es el problema general de evitar que personas no autorizadas lean o modifiquen archivos: incluye cuestiones técnicas, administrativas, legales y políticas. <strong>Protección</strong> son los mecanismos específicos del sistema operativo que se usan para salvaguardar la información de la computadora.</p>
+   <p>Hoy el reto es doble. Antes, en las computadoras multiusuario aisladas, había que evitar que un usuario husmeara en los archivos de otro. Con las PC e Internet aparecieron los ataques desde el exterior (virus, gusanos), ayudados por sistemas con millones de líneas de código y, por tanto, con muchos errores explotables.</p>
+  </div>
+  <div class="col-lg-6"><div class="fig"><strong>Idea clave.</strong> Un sistema puede ser formalmente seguro y aun así quedar comprometido si un error en el código permite que un programa haga lo que las reglas le prohíben.</div>
+   <div class="fig mt-3"><strong>Privacidad.</strong> También es un aspecto de la seguridad: proteger a las personas contra el mal uso de la información sobre ellas.</div></div>
+ </div>
+ <h3 class="h5 mt-5 mb-3">Los cuatro objetivos y su amenaza correspondiente</h3>
+ <div class="row g-3">
+  <div class="col-md-6 col-lg-3"><div class="goal" style="--c:var(--cobalt)"><i class="bi bi-eye-slash"></i><h4 class="h6 mt-2">Confidencialidad</h4><p class="small mb-2">Los datos secretos permanecen secretos; el dueño decide quién ve qué.</p><span class="th">Amenaza: exposición de los datos</span></div></div>
+  <div class="col-md-6 col-lg-3"><div class="goal" style="--c:var(--teal)"><i class="bi bi-patch-check"></i><h4 class="h6 mt-2">Integridad</h4><p class="small mb-2">Nadie sin permiso modifica, elimina ni inserta datos falsos.</p><span class="th">Amenaza: alteración de los datos</span></div></div>
+  <div class="col-md-6 col-lg-3"><div class="goal" style="--c:var(--amber)"><i class="bi bi-activity"></i><h4 class="h6 mt-2">Disponibilidad</h4><p class="small mb-2">Nadie puede dejar el sistema inutilizable.</p><span class="th">Amenaza: negación del servicio</span></div></div>
+  <div class="col-md-6 col-lg-3"><div class="goal" style="--c:var(--rose)"><i class="bi bi-door-closed"></i><h4 class="h6 mt-2">Exclusión de externos</h4><p class="small mb-2">Evitar que terceros tomen el control del equipo.</p><span class="th">Amenaza: virus que convierten la máquina en zombie</span></div></div>
+ </div>
+</div></section>
+
+<!-- 6.2 -->
+<section class="topic" id="t2"><div class="container">
+ <p class="tnum mb-1">6.2</p>
+ <h2>Clasificación aplicada a la seguridad</h2>
+ <p class="lead-s">Según el libro, la seguridad tiene tres facetas: la naturaleza de las amenazas, la naturaleza de los intrusos y la pérdida accidental de datos. El esfuerzo necesario depende de quién creamos que es el enemigo.</p>
+ <ul class="nav nav-tabs mt-4" role="tablist">
+  <li class="nav-item"><button class="nav-link active" data-bs-toggle="tab" data-bs-target="#c1">Intrusos</button></li>
+  <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#c2">Pérdida accidental</button></li>
+  <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#c3">Internos vs. externos</button></li>
+  <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#c4">Control de acceso</button></li>
+ </ul>
+ <div class="tab-content panel mt-3">
+  <div class="tab-pane fade show active" id="c1">
+   <p><span class="pill t">Pasivos</span> solo quieren leer archivos sin autorización. <span class="pill r ms-1">Activos</span> buscan modificar datos sin permiso.</p>
+   <div class="row g-3">
+    <div class="col-md-6"><strong>1. Usuarios no técnicos curiosos.</strong><br><span class="small opacity-75">Leen el correo o los archivos de otros si nada se lo impide. Ejemplo: en UNIX los archivos nuevos suelen crearse legibles para todos.</span></div>
+    <div class="col-md-6"><strong>2. Intrusos que husmean.</strong><br><span class="small opacity-75">Estudiantes, programadores u operadores que ven romper la seguridad como un reto personal.</span></div>
+    <div class="col-md-6"><strong>3. Intentos por obtener dinero.</strong><br><span class="small opacity-75">Por ejemplo, un programador bancario que modifica el software para quedarse con fracciones de centavo.</span></div>
+    <div class="col-md-6"><strong>4. Espionaje comercial o militar.</strong><br><span class="small opacity-75">Intento serio de un competidor o un país para robar secretos, diseños o planes.</span></div>
+   </div>
+  </div>
+  <div class="tab-pane fade" id="c2">
+   <p>Los datos también se pierden sin mala intención, y en la práctica esto puede causar más daño que los intrusos. La defensa principal son los <strong>respaldos</strong>, guardados lejos de los originales.</p>
+   <div class="row g-3 text-center">
+    <div class="col-md-4"><i class="bi bi-fire fs-2 text-danger"></i><p class="mb-0 fw-semibold">Accidentes y desastres</p><span class="small opacity-75">incendios, inundaciones, terremotos</span></div>
+    <div class="col-md-4"><i class="bi bi-hdd-x fs-2 text-warning"></i><p class="mb-0 fw-semibold">Errores de hardware o software</p><span class="small opacity-75">fallas de CPU, discos ilegibles, bugs</span></div>
+    <div class="col-md-4"><i class="bi bi-person-x fs-2 text-primary"></i><p class="mb-0 fw-semibold">Errores humanos</p><span class="small opacity-75">capturar mal datos, ejecutar el programa equivocado</span></div>
+   </div>
+  </div>
+  <div class="tab-pane fade" id="c3">
+   <div class="row g-4">
+    <div class="col-md-6"><h3 class="h6">Ataques desde el interior</h3><p class="small mb-0">Los hacen programadores y empleados con conocimiento y acceso especial: bombas lógicas, trampas (puertas traseras) y suplantación de identidad en el inicio de sesión.</p></div>
+    <div class="col-md-6"><h3 class="h6">Ataques desde el exterior</h3><p class="small mb-0">Suelen venir por Internet y explotan errores del sistema operativo o de aplicaciones populares: desbordamientos de búfer, inyección de código y malware (troyanos, virus, gusanos, spyware, rootkits).</p></div>
+   </div>
+  </div>
+  <div class="tab-pane fade" id="c4">
+   <div class="row g-4">
+    <div class="col-md-6"><h3 class="h6">Discrecional (DAC)</h3><p class="small mb-0">Cada usuario decide quién puede leer y escribir sus archivos. Es lo que ofrecen la mayoría de los sistemas operativos.</p></div>
+    <div class="col-md-6"><h3 class="h6">Obligatorio (MAC)</h3><p class="small mb-0">La organización fija reglas que los usuarios no pueden cambiar (militares, hospitales, patentes). Regula el flujo de información para que no se fugue.</p></div>
+   </div>
+  </div>
+ </div>
+</div></section>
+
+<!-- 6.3 -->
+<section class="topic" id="t3"><div class="container">
+ <p class="tnum mb-1">6.3</p>
+ <h2>Funciones del sistema de protección</h2>
+ <p class="lead-s">El sistema de protección define qué objetos existen, qué operaciones admiten y qué procesos pueden realizarlas. Se apoya en estos conceptos:</p>
+ <div class="accordion mt-4" id="acc3">
+  <div class="accordion-item"><h3 class="accordion-header"><button class="accordion-button" data-bs-toggle="collapse" data-bs-target="#a1">Objetos, dominios y permisos</button></h3>
+   <div id="a1" class="accordion-collapse collapse show" data-bs-parent="#acc3"><div class="accordion-body">Un <strong>objeto</strong> puede ser de hardware (CPU, disco, impresora) o de software (proceso, archivo, semáforo) y tiene operaciones propias: <code>read</code> y <code>write</code> en un archivo, <code>up</code> y <code>down</code> en un semáforo. Un <strong>dominio</strong> es un conjunto de pares (objeto, permisos). En UNIX el dominio de un proceso lo definen su UID y su GID; una llamada al sistema o ejecutar un programa con SETUID provoca un cambio de dominio.</div></div></div>
+  <div class="accordion-item"><h3 class="accordion-header"><button class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#a2">Principio de menor autoridad (POLA)</button></h3>
+   <div id="a2" class="accordion-collapse collapse" data-bs-parent="#acc3"><div class="accordion-body">Cada dominio debe tener los mínimos objetos y privilegios para hacer su trabajo, y no más. Es el principio de "necesidad de saber".</div></div></div>
+  <div class="accordion-item"><h3 class="accordion-header"><button class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#a3">Base de cómputo confiable y monitor de referencia</button></h3>
+   <div id="a3" class="accordion-collapse collapse" data-bs-parent="#acc3"><div class="accordion-body">La <strong>TCB</strong> es el hardware y software mínimos necesarios para cumplir las reglas de seguridad. Dentro de ella, el <strong>monitor de referencia</strong> recibe todas las llamadas al sistema relacionadas con seguridad (como abrir un archivo) y decide si se permiten; así todas las decisiones están en un solo lugar y no se pueden evitar. Reducir la TCB, como hace MINIX 3 con unas 4000 líneas en el kernel, mejora la seguridad potencial. La regla de diseño: mantener el sistema simple, porque las características adicionales son enemigas de la seguridad.</div></div></div>
+  <div class="accordion-item"><h3 class="accordion-header"><button class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#a4">Autenticación de usuarios</button></h3>
+   <div id="a4" class="accordion-collapse collapse" data-bs-parent="#acc3"><div class="accordion-body">Si el sistema no sabe quién es el usuario, no puede saber a qué recursos puede acceder. Los métodos se basan en <strong>algo que el usuario conoce</strong> (contraseña), <strong>algo que tiene</strong> (tarjeta) o <strong>algo que es</strong> (biometría). Se amplía en el tema 6.6.</div></div></div>
+  <div class="accordion-item"><h3 class="accordion-header"><button class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#a5">Seguridad multinivel: Bell-La Padula y Biba</button></h3>
+   <div id="a5" class="accordion-collapse collapse" data-bs-parent="#acc3"><div class="accordion-body">
+    <div class="row g-4">
+     <div class="col-md-6"><strong>Bell-La Padula (confidencialidad)</strong><p class="small mb-2">Un proceso de nivel k solo lee en su nivel o inferior, y solo escribe en su nivel o superior. La información nunca baja de nivel.</p>
+      <div class="lvl"><b>Alto secreto</b><span style="width:90%"></span></div><div class="lvl"><b>Secreto</b><span style="width:70%"></span></div><div class="lvl"><b>Confidencial</b><span style="width:50%"></span></div><div class="lvl"><b>No clasificado</b><span style="width:30%"></span></div></div>
+     <div class="col-md-6"><strong>Biba (integridad)</strong><p class="small mb-0">Las reglas inversas: un proceso de nivel k solo escribe en su nivel o inferior, y solo lee en su nivel o superior. Así el programador puede actualizar los archivos del conserje con información del presidente, pero no al revés. Los dos modelos están en conflicto directo, por eso es difícil tener ambos.</p></div>
+    </div></div></div></div>
+  <div class="accordion-item"><h3 class="accordion-header"><button class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#a6">Canales encubiertos y esteganografía</button></h3>
+   <div id="a6" class="accordion-collapse collapse" data-bs-parent="#acc3"><div class="accordion-body">Aun con un modelo demostrado, la información puede fugarse por canales sutiles: modular el uso de la CPU, la paginación o el bloqueo de archivos para enviar bits. La <strong>esteganografía</strong> oculta datos dentro de otros, por ejemplo en los bits menos significativos de los píxeles de una imagen; también sirve para marcas de agua.</div></div></div>
+ </div>
+</div></section>
+
+<!-- 6.4 -->
+<section class="topic" id="t4"><div class="container">
+ <p class="tnum mb-1">6.4</p>
+ <h2>Implantación de matrices de acceso</h2>
+ <p class="lead-s">En concepto, el sistema es una gran matriz: filas son dominios, columnas son objetos y cada cuadro lista los permisos. Un dominio también puede ser un objeto con la operación <code>enter</code>, lo que modela el cambio de dominio (como un programa SETUID).</p>
+ <div class="panel mt-4"><div class="table-responsive"><table class="matrix" id="m-doc"></table></div></div>
+ <p class="mt-4">En la práctica la matriz casi nunca se guarda completa: es grande y casi vacía. Se almacena por columnas (ACL) o por filas (capacidades), guardando solo lo no vacío.</p>
+ <div class="row g-4">
+  <div class="col-lg-6"><div class="panel h-100">
+   <h3 class="h5"><i class="bi bi-layout-sidebar-reverse text-primary me-2"></i>Listas de control de acceso (por columna)</h3>
+   <p class="small">Cada objeto tiene una lista de los dominios que pueden accederlo y cómo.</p>
+   <pre class="chip d-block p-3 mb-3" style="white-space:pre-wrap">F1: A:RW; B:R
+F2: A:R; B:RW; C:R
+F3: B:RWX; C:RX</pre>
+   <p class="small mb-0">Los permisos van por usuario, no por proceso. Se admiten grupos y comodines (<code>virgil, *: (none); *, *: RW</code> bloquea solo a Virgil, porque se toma la primera entrada que coincide). Revocar es fácil: se edita la ACL, aunque los archivos ya abiertos conservan sus derechos.</p></div></div>
+  <div class="col-lg-6"><div class="panel h-100">
+   <h3 class="h5"><i class="bi bi-key text-primary me-2"></i>Capacidades (por fila)</h3>
+   <p class="small">Cada proceso tiene una lista-C con los objetos que puede usar y las operaciones permitidas.</p>
+   <pre class="chip d-block p-3 mb-3" style="white-space:pre-wrap">Proceso A: F1:R, F2:R
+Proceso B: F1:R, F2:RW, F3:RWX
+Proceso C: F2:R, F3:RX</pre>
+   <p class="small mb-0">Hay que protegerlas contra alteraciones: con arquitectura etiquetada, guardándolas en el kernel, o en espacio de usuario pero protegidas criptográficamente (como en Amoeba). Revocar es difícil.</p></div></div>
+ </div>
+ <div class="table-responsive mt-4"><table class="table align-middle">
+  <thead><tr><th></th><th>ACL</th><th>Capacidades</th></tr></thead>
+  <tbody>
+   <tr><td class="fw-semibold">Eficiencia</td><td>Puede requerir buscar en una lista extensa</td><td>Eficiente: no hay que buscar</td></tr>
+   <tr><td class="fw-semibold">Revocación selectiva</td><td><span class="pill t">Sí</span></td><td><span class="pill r">No</span></td></tr>
+   <tr><td class="fw-semibold">Encapsular un proceso</td><td><span class="pill r">Difícil</span></td><td><span class="pill t">Fácil</span></td></tr>
+   <tr><td class="fw-semibold">Objeto borrado y referencias</td><td>Sin problema</td><td>Pueden quedar capacidades sueltas</td></tr>
+  </tbody></table></div>
+ <div class="fig">Harrison y colaboradores identificaron seis operaciones primitivas sobre la matriz: crear y eliminar objeto, crear y eliminar dominio, insertar y quitar permiso. Con ellas se modelan los comandos de protección.</div>
+</div></section>
+
+<!-- 6.5 -->
+<section class="topic" id="t5"><div class="container">
+ <p class="tnum mb-1">6.5</p>
+ <h2>Protección basada en el lenguaje</h2>
+ <p class="lead-s">Aquí la protección no depende solo del kernel: el propio lenguaje y su entorno de ejecución limitan lo que un programa puede hacer. El libro lo trata al hablar de errores en C y de código móvil (applets) y Java.</p>
+ <div class="row g-4 mt-1">
+  <div class="col-lg-6"><div class="panel h-100">
+   <h3 class="h5 text-danger">C: sin comprobación de límites</h3>
+   <p class="small">Casi todos los sistemas operativos están escritos en C y ningún compilador comprueba los límites de los arreglos. Esto origina los <strong>desbordamientos de búfer</strong>, una de las mayores fuentes de ataques.</p>
+<pre class="chip d-block p-3" style="white-space:pre-wrap">int i;
+char c[1024];
+i = 12000;
+c[i] = 0;   /* sobrescribe memoria ajena */</pre>
+  </div></div>
+  <div class="col-lg-6"><div class="panel h-100">
+   <h3 class="h5 text-success">Java: seguridad de tipos</h3>
+   <p class="small">El compilador rechaza usar una variable de forma incompatible con su tipo. No hay apuntadores, ni conversiones libres, ni <code>malloc</code>/<code>free</code> controlados por el usuario, y los accesos a arreglos se comprueban en ejecución.</p>
+   <p class="small mb-0">Antes de ejecutar un applet, el <strong>verificador de código byte de la JVM</strong> comprueba que no falsifique apuntadores, no viole miembros privados, no mezcle tipos, no desborde la pila y no haga conversiones ilegales.</p>
+  </div></div>
+ </div>
+ <h3 class="h5 mt-5 mb-3">Cómo ejecutar código extraño con riesgo controlado</h3>
+ <div class="row g-3">
+  <div class="col-md-4"><div class="goal" style="--c:var(--cobalt)"><i class="bi bi-box"></i><h4 class="h6 mt-2">Cajas de arena</h4><p class="small mb-0">Se confina cada applet a un rango de direcciones (una caja para código y otra para datos). Las llamadas al sistema pasan por un monitor de referencias. El costo medido fue de alrededor de 4 %.</p></div></div>
+  <div class="col-md-4"><div class="goal" style="--c:var(--teal)"><i class="bi bi-cpu"></i><h4 class="h6 mt-2">Interpretación</h4><p class="small mb-0">Un intérprete (como la JVM del navegador) examina cada instrucción antes de ejecutarla. Es más lento que el código nativo.</p></div></div>
+  <div class="col-md-4"><div class="goal" style="--c:var(--amber)"><i class="bi bi-patch-check"></i><h4 class="h6 mt-2">Firma de código</h4><p class="small mb-0">Se verifica quién firmó el applet y se confía según una lista de firmantes. Sirve para saber el origen, no el comportamiento.</p></div></div>
+ </div>
+ <div class="fig mt-4"><strong>Evolución del modelo de Java.</strong> JDK 1.0: applets confiables (locales) y no confiables (caja de arena). JDK 1.1: se añade la firma de código. JDK 1.2: directiva de seguridad detallada, con reglas por URL de origen, firmante, objeto y acción.</div>
+</div></section>
+
+<!-- 6.6 -->
+<section class="topic" id="t6"><div class="container">
+ <p class="tnum mb-1">6.6</p>
+ <h2>Validación y amenazas al sistema</h2>
+ <div class="row g-5 mt-0">
+  <div class="col-lg-6">
+   <h3 class="h4">Validación (autenticación)</h3>
+   <div class="accordion mt-3" id="acc6">
+    <div class="accordion-item"><h4 class="accordion-header"><button class="accordion-button" data-bs-toggle="collapse" data-bs-target="#v1">Algo que conoces: contraseñas</button></h4>
+     <div id="v1" class="accordion-collapse collapse show" data-bs-parent="#acc6"><div class="accordion-body small">Es el método más usado. El sistema no debe revelar si falló el nombre o la contraseña. Las contraseñas débiles son un problema serio: Morris y Thompson encontraron cerca de 86 % en su lista de candidatas probables. En UNIX no se guardan en claro: se almacena el resultado de una función de una vía más un <strong>salt</strong> aleatorio, que impide calcular de antemano los cifrados de un diccionario. Con las <strong>contraseñas de un solo uso</strong> (esquema de Lamport, cadena de hash) cada inicio de sesión usa una distinta.</div></div></div>
+    <div class="accordion-item"><h4 class="accordion-header"><button class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#v2">Algo que tienes: objeto físico</button></h4>
+     <div id="v2" class="accordion-collapse collapse" data-bs-parent="#acc6"><div class="accordion-body small">Tarjetas de tira magnética, de valor almacenado o inteligentes. Las inteligentes son pequeñas computadoras que responden a un reto con un cálculo, de modo que escuchar la red no sirve de nada. Siguen expuestas a ataques de canal lateral, como medir el consumo de energía.</div></div></div>
+    <div class="accordion-item"><h4 class="accordion-header"><button class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#v3">Algo que eres: biometría</button></h4>
+     <div id="v3" class="accordion-collapse collapse" data-bs-parent="#acc6"><div class="accordion-body small">Dos fases: inscripción e identificación. Ejemplos: longitud de los dedos, iris, firma, voz. Como las mediciones nunca coinciden exactamente, hay que decidir entre rechazar a veces a un usuario legítimo o dejar pasar a un impostor. El esquema también debe ser aceptable para los usuarios.</div></div></div>
+   </div>
+  </div>
+  <div class="col-lg-6">
+   <h3 class="h4">Amenazas</h3>
+   <div class="table-responsive mt-3"><table class="table align-middle small">
+    <thead><tr><th>Amenaza</th><th>En qué consiste</th></tr></thead>
+    <tbody>
+     <tr><td class="fw-semibold">Bomba lógica</td><td>Código oculto que se activa si deja de recibir una señal, por ejemplo si el programador es despedido.</td></tr>
+     <tr><td class="fw-semibold">Trampa</td><td>Código que evita un chequeo de rutina, como un usuario que siempre puede iniciar sesión. Se detecta con revisiones de código.</td></tr>
+     <tr><td class="fw-semibold">Suplantación de inicio de sesión</td><td>Una pantalla falsa recolecta contraseñas. Se evita con una secuencia de teclas no interceptable (CTRL-ALT-SUPR).</td></tr>
+     <tr><td class="fw-semibold">Desbordamiento de búfer</td><td>Se sobrescribe la pila, incluida la dirección de retorno. Variantes: cadenas de formato, retorno a libc, desbordamiento de enteros, inyección de código y escalada de privilegios.</td></tr>
+     <tr><td class="fw-semibold">Troyano</td><td>Programa útil con malware incrustado que el usuario instala voluntariamente.</td></tr>
+     <tr><td class="fw-semibold">Virus y gusano</td><td>El virus se duplica dentro de otros programas; el gusano se propaga solo por la red (el de Morris en 1988 inutilizó miles de equipos).</td></tr>
+     <tr><td class="fw-semibold">Spyware y rootkit</td><td>El spyware actúa a espaldas del dueño; el rootkit oculta su existencia incluso ante intentos de eliminarlo.</td></tr>
+    </tbody></table></div>
+   <p class="small mb-0"><strong>Defensas</strong> (en profundidad): firewalls, antivirus, firma de código, encarcelamiento, detección de intrusos basada en modelos y encapsulamiento de código móvil.</p>
+  </div>
+ </div>
+</div></section>
+
+<!-- 6.7 -->
+<section class="topic" id="t7"><div class="container">
+ <p class="tnum mb-1">6.7</p>
+ <h2>Cifrado</h2>
+ <div class="row g-4 mt-1">
+  <div class="col-lg-6">
+   <p>La criptografía convierte un <strong>texto simple</strong> P en <strong>texto cifrado</strong> C de modo que solo los autorizados puedan revertirlo.</p>
+   <div class="fig mono mb-3">C = E(P, K<sub>E</sub>) &nbsp;&nbsp;&nbsp; P = D(C, K<sub>D</sub>)</div>
+   <p>Según el <strong>principio de Kerckhoffs</strong>, los algoritmos deben ser públicos y el secreto debe residir solo en las claves. Confiar en un algoritmo secreto es "seguridad por oscuridad".</p>
+  </div>
+  <div class="col-lg-6"><div class="panel">
+   <h3 class="h5">Demo: sustitución monoalfabética</h3>
+   <p class="small opacity-75">Usa la clave del libro: A→Q, B→W, C→E… (clave <span class="mono">QWERTYUIOPASDFGHJKLZXCVBNM</span>). Escribe un texto.</p>
+   <input id="pt" class="form-control mono" value="ATTACK" aria-label="Texto simple">
+   <div class="mt-3 small opacity-75">Texto cifrado:</div>
+   <div id="ct" class="cipher"></div>
+   <p class="small mt-3 mb-0">Parece segura (26! ≈ 4×10<sup>26</sup> claves), pero se rompe con estadísticas del idioma: en inglés la letra más común es la e.</p>
+  </div></div>
+ </div>
+ <div class="row g-3 mt-3">
+  <div class="col-md-6 col-lg-3"><div class="goal" style="--c:var(--cobalt)"><i class="bi bi-key-fill"></i><h4 class="h6 mt-2">Clave secreta (simétrica)</h4><p class="small mb-0">Misma clave para cifrar y descifrar. Es rápida, pero emisor y receptor deben compartir la clave. Se recomiendan al menos 256 bits.</p></div></div>
+  <div class="col-md-6 col-lg-3"><div class="goal" style="--c:var(--teal)"><i class="bi bi-people"></i><h4 class="h6 mt-2">Clave pública</h4><p class="small mb-0">Un par (pública, privada). Se cifra con la pública del receptor y solo él descifra con la privada. Ejemplo: RSA. Es unas mil veces más lenta.</p></div></div>
+  <div class="col-md-6 col-lg-3"><div class="goal" style="--c:var(--amber)"><i class="bi bi-hash"></i><h4 class="h6 mt-2">Funciones de una vía (hash)</h4><p class="small mb-0">Fácil calcular f(x), imposible recuperar x. Ejemplos: MD5 (16 bytes), SHA-1 (20 bytes), SHA-256 y SHA-512.</p></div></div>
+  <div class="col-md-6 col-lg-3"><div class="goal" style="--c:var(--rose)"><i class="bi bi-pen"></i><h4 class="h6 mt-2">Firmas digitales</h4><p class="small mb-0">Se calcula el hash del documento y se le aplica la clave privada. El receptor verifica con la clave pública y compara hashes.</p></div></div>
+ </div>
+ <div class="row g-4 mt-2">
+  <div class="col-lg-6"><div class="fig"><strong>Certificados y PKI.</strong> Una autoridad de certificación (CA) firma un certificado con el nombre y la clave pública de un usuario. Los navegadores ya traen cargadas las claves de unas 40 CA.</div></div>
+  <div class="col-lg-6"><div class="fig"><strong>TPM.</strong> Chip criptoprocesador con almacenamiento no volátil para guardar claves y realizar operaciones criptográficas. Es controvertido porque también puede limitar qué software puede ejecutar el usuario.</div></div>
+ </div>
+</div></section>
+
+<!-- ============ EQUIPO ============ -->
+<section class="topic" id="equipo"><div class="container">
+ <p class="tnum mb-1">Equipo</p>
+ <h2>Integrantes del equipo</h2>
+ <p class="lead-s">Las personas que desarrollaron este proyecto.</p>
+ <div class="row g-4 mt-1 justify-content-center">
+
+  <!-- INTEGRANTE 1 -->
+  <div class="col-md-6 col-lg-4"><div class="team-card">
+   <div class="avatar"><div class="avatar-in"><i class="bi bi-person-fill"></i><img src="YoFoto.jpeg" alt="Foto del integrante 1" onerror="this.remove()"></div></div>
+   <h3 class="h5 mb-2">Sebastián Durán Palma</h3>
+   <span class="chip"><i class="bi bi-person-badge me-1"></i>25410172</span>
+  </div></div>
+
+  <!-- INTEGRANTE 2 -->
+  <div class="col-md-6 col-lg-4"><div class="team-card">
+   <div class="avatar"><div class="avatar-in"><i class="bi bi-person-fill"></i><img src="milofotoface.jpeg" alt="Foto del integrante 2" onerror="this.remove()"></div></div>
+   <h3 class="h5 mb-2">Luis Emilio Coronado Silva </h3>
+   <span class="chip"><i class="bi bi-person-badge me-1"></i>25410163</span>
+  </div></div>
+
+  <!-- INTEGRANTE 3 -->
+  <div class="col-md-6 col-lg-4"><div class="team-card">
+   <div class="avatar"><div class="avatar-in"><i class="bi bi-person-fill"></i><img src="diegofoto.jpeg" alt="Foto del integrante 3" onerror="this.remove()"></div></div>
+   <h3 class="h5 mb-2">Diego Alexander Nevarez Rodriguez</h3>
+   <span class="chip"><i class="bi bi-person-badge me-1"></i>25410149</span>
+  </div></div>
+
+ </div>
+</div></section>
+</main>
+
+<footer><div class="container">
+ <p class="mb-1"><strong>Fuente:</strong> Tanenbaum, A. S. <em>Sistemas operativos modernos</em>, 3.ª ed.</p>
+ <p class="mb-0">© 2026 Guayaba´s Team S.A de C.V. All rights reserved.</p>
+</div></footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+const DOMS=['Dominio 1','Dominio 2','Dominio 3'];
+const OBJS=['Archivo1','Archivo2','Archivo4','Archivo6','Impresora1','Plotter2'];
+const M=[['R','RW','','','',''],['RW','','RWX','','W',''],['','','','RWX','W','W']];
+function cls(p){return p?'cell p'+(p.includes('X')?' x':p.includes('W')?' w':''):'cell'}
+function render(id,live){
+ const t=document.getElementById(id);
+ t.innerHTML='<tr><th></th>'+OBJS.map(o=>`<th>${o}</th>`).join('')+'</tr>'+
+  M.map((r,i)=>`<tr><th class="dom">${DOMS[i]}</th>`+r.map((p,j)=>`<td class="${cls(p)}" data-i="${i}" data-j="${j}"${live?' tabindex="0" role="button"':''}>${p||'—'}</td>`).join('')+'</tr>').join('');
+ if(live){
+  const tog=e=>{const c=e.target.closest('td.cell');if(!c)return;
+   const s=['','R','RW','RWX'],i=+c.dataset.i,j=+c.dataset.j;
+   M[i][j]=s[(s.indexOf(M[i][j])+1)%4];
+   render('m-hero',true);render('m-doc',false);check()};
+  t.onclick=tog;t.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();tog(e)}};
+ }
+}
+function check(){
+ const i=+qd.value,j=+qo.value,a=qa.value,ok=M[i][j].includes(a);
+ const v={R:'leer',W:'escribir',X:'ejecutar'}[a];
+ qr.className='verdict '+(ok?'ok':'no');
+ qr.textContent=ok?'Permitido':'Denegado: sin permiso para '+v;
+}
+const qd=document.getElementById('qd'),qo=document.getElementById('qo'),qa=document.getElementById('qa'),qr=document.getElementById('qr');
+qd.innerHTML=DOMS.map((d,i)=>`<option value="${i}">${d}</option>`).join('');
+qo.innerHTML=OBJS.map((o,j)=>`<option value="${j}">${o}</option>`).join('');
+[qd,qo,qa].forEach(e=>e.onchange=check);
+render('m-hero',true);render('m-doc',false);check();
+
+// Cifrado de sustitución del libro
+const K='QWERTYUIOPASDFGHJKLZXCVBNM',pt=document.getElementById('pt'),ct=document.getElementById('ct');
+function enc(){ct.textContent=pt.value.toUpperCase().replace(/[A-Z]/g,c=>K[c.charCodeAt(0)-65])||'…'}
+pt.oninput=enc;enc();
+
+// Tema claro/oscuro
+const th=document.getElementById('theme');
+th.onclick=()=>{const d=document.documentElement.dataset.bsTheme==='dark';
+ document.documentElement.dataset.bsTheme=d?'light':'dark';
+ th.innerHTML=`<i class="bi bi-${d?'moon-stars':'sun'}"></i>`};
+
+// Animaciones de entrada al hacer scroll
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.12});
+document.querySelectorAll('section.topic .container > *, section.topic .container > .row > *').forEach(el=>{
+ el.classList.add('rv');
+ if(el.parentElement.classList.contains('row'))el.style.transitionDelay=([...el.parentElement.children].indexOf(el)%4)*90+'ms';
+ io.observe(el);
+});
+
+// Barra de progreso de lectura
+const bar=document.getElementById('bar');
+addEventListener('scroll',()=>{const h=document.documentElement;bar.style.width=(h.scrollTop/(h.scrollHeight-h.clientHeight)*100)+'%'});
+</script>
+</body>
+</html>
